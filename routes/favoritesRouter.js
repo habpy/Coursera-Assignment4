@@ -39,20 +39,20 @@ favoritesRouter.route('/')
   Favorites.findOne({ postedBy: userId }, function(err, favorite) {
     if(err) throw err;
       if(! favorite || favorite.length === 0) {
-        Favorites.create(favoriteDishesData, function(err, fav) {
+        Favorites.create(favoriteDishesData, function(err, favores) {
           if(err) throw err;
             console.log("A favorate dish has been created!");
-            res.json(fav);
+            res.json(favores);
         });
       } else {
         if(favorite.dishes.indexOf(dishId) > -1) {
           res.json("This is allreayd in the favorite list!");
         } else {
           favorite.dishes.push(dishId);
-          favorite.save(function(err, fav) {
+          favorite.save(function(err, favores) {
             if(err) throw err;
               console.log("Added favorite dish!");
-              res.json(fav);
+              res.json(favores);
           });
         }
       }
@@ -70,10 +70,10 @@ favoritesRouter.route('/')
 favoritesRouter.route('/:dishId')
 .delete(Verify.verifyOrdinaryUser, function(req, res, next) {
   var dishId = req.params.dishId;
-  Favorites.findOne({ postedBy: req.decoded._doc._id, dishes: dishId }, function(err, fav) {
+  Favorites.findOne({ postedBy: req.decoded._doc._id, dishes: dishId }, function(err, favores) {
     if(err) throw err;
       fav.dishes.remove(dishId);
-      fav.save(function(err, fav) {
+      fav.save(function(err, favores) {
         if(err) throw err;
           console.log("Removed favorite from list!");
           res.json(fav);
